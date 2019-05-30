@@ -2,6 +2,7 @@ real_examples/
 exported/
 __temp__/
 .idea
+test_output
 
 
 # Byte-compiled / optimized / DLL files

@@ -110,6 +110,7 @@ class ProgSnap2:
                                            **self.csv_writer_options)
             self.finalize_table()
             optionals = Event.distill_parameters(self.main_table)
+            # TODO: Only add optional columns to the header if they are used
             header = self.main_table_header
             header.sort(key=Event.get_parameter_order)
             main_table_writer.writerow(header)
@@ -221,7 +222,7 @@ class ProgSnap2:
         self.main_table.append(new_event)
         return new_event
 
-    def log_code_state(self, submission, zipped):
+    def log_code_state(self, submission, zipped=None):
         """
         Add in a Submit event, which has associated code in the zip file.
 
@@ -298,6 +299,7 @@ class Event:
         self.ToolInstances = ToolInstances
         self._optional_parameters = kwargs
         # Keep track of events
+        # TODO: Should allow manual IDs
         self.EventID = self._track_new_event()
         # Private fields not related to dataset
         # TODO: order should also be auto-generated if desired
@@ -365,6 +367,7 @@ class Event:
             optional_parameters.update(event._optional_parameters)
         return {p: "" for p in optional_parameters}
 
+    # TODO: should use Order first, then each timestamp
     def get_order(self):
         """
         Create a value representing the absolute position of a given
@@ -373,7 +376,7 @@ class Event:
         Returns:
             str: The timestamp
         """
-        return self.ClientTimestamp
+        return self.ClientTimestamp if self.ClientTimestamp is not None else self.ServerTimestamp
 
     @staticmethod
     def get_parameter_order(parameter):
@@ -399,6 +402,9 @@ class Event:
 
 
 def _make_file(filename):
+    directory = os.path.dirname(filename)
+    if not os.path.exists(directory):
+        os.makedirs(directory)
     return open(filename, 'w', newline='', encoding=ENCODING)
 
 
