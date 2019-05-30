@@ -286,11 +286,13 @@ class Event:
 
     def __init__(self, ClientTimestamp, SubjectID, EventType, AssignmentID,
                  ServerTimestamp, ToolInstances, Score=None, CodeStateID=None, **kwargs):
+        # TODO: PS2 should enforce the correct timestamp format
         self.ClientTimestamp = ClientTimestamp
         self.ServerTimestamp = ServerTimestamp
         self.SubjectID = SubjectID
         self.AssignmentID = AssignmentID
         self.EventType = EventType
+        # TODO: CodeStateID should be auto-hashed by this class
         self.CodeStateID = CodeStateID
         self.Score = Score
         self.ToolInstances = ToolInstances
@@ -298,6 +300,7 @@ class Event:
         # Keep track of events
         self.EventID = self._track_new_event()
         # Private fields not related to dataset
+        # TODO: order should also be auto-generated if desired
         self.Order = None
 
     @classmethod
